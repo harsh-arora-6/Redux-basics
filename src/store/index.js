@@ -1,24 +1,30 @@
-import { createStore } from "redux";
+import { createSlice,configureStore } from '@reduxjs/toolkit';
+
 const initialState = { counter: 0, showCounter: true };
-const countReducer = (state = initialState, action) => {
-    // Never mutate a state , it could lead to unpredicatable bugs
-  if (action.type === "increment") {
-    /**
-     * Don't do like 
-    //  * state.counter++ wrong way 
-     * return state 
-     */
-    return { counter: state.counter + 1,showCounter:state.showCounter };
-  }
-  if (action.type === "decrement") {
-    return { counter: state.counter - 1,showCounter:state.showCounter };
-  }
-  if (action.type === "toggle") {
-    return { counter: state.counter,showCounter:!state.showCounter };
-  }
-  return state;
-};
 
-const store = createStore(countReducer);
+const counterSlice = createSlice({
+    name:'counter',
+    initialState,
+    reducers:{
+        // in this behind the scenes redux toolkit creates a new state object copies other entries which are not modified and overrides the ones which are modified
+        increment(state){
+            state.counter++;
+        },
+        decrement(state){
+            state.counter--;
+        },
+        increase(state,action){
+            state.counter = state.counter + action.payload;
+        },
+        toggle(state){
+            state.showCounter = !state.showCounter;
+        }
+    }
+})
 
+
+const store = configureStore({
+    reducer: counterSlice.reducer
+});
+export const counterActions = counterSlice.actions;
 export default store;
